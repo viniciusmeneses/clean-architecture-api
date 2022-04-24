@@ -1,0 +1,29 @@
+{
+  "extends": ["alloy", "alloy/typescript"],
+  "plugins": ["simple-import-sort", "import"],
+  "env": {
+    "node": true,
+    "jest": true,
+    "es2021": true
+  },
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "import/first": "error",
+    "import/newline-after-import": "error",
+    "import/no-duplicates": "error",
+    "simple-import-sort/exports": "error",
+    "simple-import-sort/imports": [
+      "error",
+      {
+        "groups": [
+          ["^\\w"],
+          ["^@"],
+          ["^\\.\\.(?!/?$)", "^\\.\\./?$"], // Parent imports and ".."
+          ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"] // Same folder imports and "."
+        ]
+      }
+    ]
+  }
+}
