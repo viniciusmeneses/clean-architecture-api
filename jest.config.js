@@ -6,4 +6,7 @@ module.exports = {
   testMatch: ["**/*.spec.ts"],
   testEnvironment: "node",
   clearMocks: true,
+  transform: {
+    "^.+\\.(t|j)s$": ["@swc-node/jest"],
+  },
 };
