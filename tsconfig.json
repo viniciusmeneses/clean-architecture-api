@@ -2,19 +2,16 @@
   "compilerOptions": {
     "outDir": "./dist",
     "module": "commonjs",
-    "target": "es2020",
+    "target": "es2021",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "esModuleInterop": true,
     "allowJs": true,
     "sourceMap": true,
+    "skipLibCheck": true,
     "rootDirs": ["src", "tests"],
     "baseUrl": "src",
-    "paths": {
-      "@/tests/*": ["../tests/*"],
-      "@/*": ["*"]
-    }
+    "removeComments": true,
   },
-  "include": ["src", "tests"],
-  "exclude": []
+  "include": ["src", "tests"]
 }
