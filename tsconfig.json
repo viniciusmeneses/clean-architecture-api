@@ -3,6 +3,7 @@
     "outDir": "./dist",
     "module": "commonjs",
     "target": "es2021",
+    "isolatedModules": true,
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
     "allowJs": true,

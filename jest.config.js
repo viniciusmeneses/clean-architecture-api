@@ -14,6 +14,6 @@ module.exports = {
     "@tests/(.*)": "<rootDir>/tests/$1",
   },
   transform: {
-    "^.+\\.(t|j)s$": ["ts-jest"],
+    "^.+\\.(t|j)s$": ["@swc/jest"],
   },
 };
