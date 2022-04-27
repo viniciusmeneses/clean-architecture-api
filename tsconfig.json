@@ -4,7 +4,6 @@
     "module": "commonjs",
     "target": "es2021",
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
     "esModuleInterop": true,
     "allowJs": true,
     "sourceMap": true,
@@ -12,6 +11,8 @@
     "rootDirs": ["src", "tests"],
     "baseUrl": "src",
     "removeComments": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
   },
   "include": ["src", "tests"]
 }
