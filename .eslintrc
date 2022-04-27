@@ -6,9 +6,6 @@
     "jest": true,
     "es2021": true
   },
-  "parserOptions": {
-    "project": "./tsconfig.json"
-  },
   "rules": {
     "import/first": "error",
     "import/newline-after-import": "error",
