@@ -1,14 +1,4 @@
-import { Param } from "@domain/validator";
-
-class UseCaseStubInput {
-  public data: string;
-}
-
-class UseCaseStub {
-  public async execute(@Param _input: UseCaseStubInput): Promise<void> {
-    return null;
-  }
-}
+import { UseCaseStub, UseCaseStubInput } from "./mocks/mockUseCase";
 
 const makeSut = () => new UseCaseStub();
 

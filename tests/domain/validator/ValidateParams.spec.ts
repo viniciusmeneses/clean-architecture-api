@@ -1,17 +1,8 @@
 import * as classValidator from "class-validator";
 
-import { Param, ValidateParams, ValidationErrors } from "../../../src/domain/validator";
+import { ValidateParams, ValidationErrors } from "../../../src/domain/validator";
 
-class UseCaseStubInput {
-  public data: string;
-}
-
-class UseCaseStub {
-  @ValidateParams
-  public async execute(@Param _input: UseCaseStubInput): Promise<void> {
-    return null;
-  }
-}
+import { UseCaseStub, UseCaseStubInput } from "./mocks/mockUseCase";
 
 const makeSut = () => new UseCaseStub();
 
