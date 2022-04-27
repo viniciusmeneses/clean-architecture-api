@@ -21,6 +21,8 @@
           ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"] // Same folder imports and "."
         ]
       }
-    ]
+    ],
+    "@typescript-eslint/no-parameter-properties": "off",
+    "@typescript-eslint/method-signature-style": ["error", "method"]
   }
 }
