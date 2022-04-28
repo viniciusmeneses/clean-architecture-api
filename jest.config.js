@@ -1,7 +1,9 @@
 module.exports = {
   roots: ["<rootDir>/src", "<rootDir>/tests"],
   coverageDirectory: "coverage",
-  coverageProvider: "babel",
+  coverageProvider: "v8",
+  collectCoverageFrom: ["src/**/*.ts", "!src/**/index.ts"],
+  coverageReporters: ["lcov", "text"],
   testMatch: ["**/*.spec.ts"],
   testEnvironment: "node",
   clearMocks: true,
