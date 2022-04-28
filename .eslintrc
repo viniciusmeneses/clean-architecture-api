@@ -23,6 +23,7 @@
       }
     ],
     "@typescript-eslint/no-parameter-properties": "off",
-    "@typescript-eslint/method-signature-style": ["error", "method"]
+    "@typescript-eslint/method-signature-style": ["error", "method"],
+    "@typescript-eslint/no-namespace": "off"
   }
 }
