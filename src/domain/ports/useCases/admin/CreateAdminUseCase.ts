@@ -10,7 +10,7 @@ export namespace CreateAdminUseCase {
     public email: string;
 
     @MinLength(8)
-    @Matches(/[1-9]/)
+    @Matches(/\d/)
     public password: string;
   }
 
