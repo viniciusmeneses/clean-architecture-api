@@ -1,3 +1,3 @@
-import { validate } from "class-validator";
+import { validateOrReject } from "class-validator";
 
-export const validateSut = (sut: object) => validate(sut, { skipUndefinedProperties: true });
+export const validateSut = (sut: object) => validateOrReject(sut, { skipUndefinedProperties: true });
