@@ -1,6 +1,6 @@
 import * as classValidator from "class-validator";
 
-import { faker } from "@faker-js/faker";
+import faker from "@faker-js/faker";
 
 import { ValidateParams, ValidationErrors } from "../../../src/domain/validator";
 

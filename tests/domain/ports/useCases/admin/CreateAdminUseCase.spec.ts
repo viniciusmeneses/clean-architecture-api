@@ -1,7 +1,7 @@
 import { CreateAdminUseCase } from "@domain/ports/useCases/admin/CreateAdminUseCase";
-import { faker } from "@faker-js/faker";
+import faker from "@faker-js/faker";
 
-import { validateSut } from "../../helpers";
+import { validateSut } from "../../helpers/validateSut";
 
 const makeSut = (data: object) => Object.assign(new CreateAdminUseCase.Params(), data);
 
