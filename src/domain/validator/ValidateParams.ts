@@ -26,7 +26,7 @@ export function ValidateParams(target: Object, propertyKey: string | symbol, des
       }
     }
 
-    return await method.apply(target, params);
+    return await method.apply(this, params);
   };
 
   return descriptor;
