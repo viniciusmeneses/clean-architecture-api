@@ -1,7 +1,7 @@
 module.exports = {
   roots: ["<rootDir>/src", "<rootDir>/tests"],
   coverageDirectory: "coverage",
-  coverageProvider: "v8",
+  coverageProvider: "babel",
   collectCoverageFrom: ["src/**/*.ts", "!src/**/index.ts"],
   coverageReporters: ["lcov", "text"],
   testMatch: ["**/*.spec.ts"],
@@ -16,6 +16,6 @@ module.exports = {
     "@tests/(.*)": "<rootDir>/tests/$1",
   },
   transform: {
-    "^.+\\.(t|j)s$": ["@swc/jest"],
+    "^.+\\.ts$": ["ts-jest"],
   },
 };
