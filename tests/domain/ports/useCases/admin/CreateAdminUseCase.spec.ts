@@ -1,5 +1,6 @@
 import { CreateAdminUseCase } from "@domain/ports/useCases/admin/CreateAdminUseCase";
 import faker from "@faker-js/faker";
+import { fakeCreateAdminParams } from "@tests/domain/fakes/fakeAdmin";
 
 import { validateSut } from "../../helpers/validateSut";
 
@@ -22,7 +23,7 @@ describe("CreateAdmin UseCase Params", () => {
   });
 
   it("Should not throw if params are valid", async () => {
-    const sut = makeSut({ email: faker.internet.email(), password: faker.internet.password(8, false, /[a-z\d]/) });
+    const sut = makeSut(fakeCreateAdminParams());
     await expect(validateSut(sut)).resolves.toBeUndefined();
   });
 });
