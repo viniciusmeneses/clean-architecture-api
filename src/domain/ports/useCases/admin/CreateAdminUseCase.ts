@@ -1,7 +1,7 @@
 import { IsEmail, Matches, MinLength } from "class-validator";
 
 export interface CreateAdminUseCase {
-  execute(data: CreateAdminUseCase.Params): CreateAdminUseCase.Result;
+  execute(data: CreateAdminUseCase.Params): Promise<CreateAdminUseCase.Result>;
 }
 
 export namespace CreateAdminUseCase {
@@ -14,5 +14,8 @@ export namespace CreateAdminUseCase {
     public password: string;
   }
 
-  export type Result = Promise<void>;
+  export interface Result {
+    id: string;
+    email: string;
+  }
 }
