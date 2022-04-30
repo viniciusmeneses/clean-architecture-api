@@ -11,12 +11,17 @@
     "test:e2e": "yarn test --watch -c jest-e2e.config.js",
     "test:staged": "yarn test --findRelatedTests",
     "test:coverage": "yarn test --coverage",
+    "typeorm": "node -r '@swc/register' ./node_modules/typeorm/cli.js -d typeorm.config.ts",
+    "migration:run": "yarn typeorm migration:run",
+    "migration:revert": "yarn typeorm migration:revert",
+    "migration:create": "typeorm migration:create",
     "prepare": "husky install"
   },
   "devDependencies": {
     "@faker-js/faker": "^6.2.0",
     "@swc/cli": "^0.1.57",
     "@swc/core": "^1.2.172",
+    "@swc/register": "^0.1.10",
     "@types/jest": "^27.4.1",
     "@types/node": "^17.0.25",
     "@typescript-eslint/eslint-plugin": "^5.20.0",
@@ -40,6 +45,9 @@
   },
   "dependencies": {
     "class-validator": "^0.13.2",
-    "reflect-metadata": "^0.1.13"
+    "dotenv": "^16.0.0",
+    "pg": "^8.7.3",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.3.6"
   }
 }
