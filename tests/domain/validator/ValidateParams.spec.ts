@@ -1,4 +1,4 @@
-import * as classValidator from "class-validator";
+import { validateOrReject, ValidationError } from "class-validator";
 
 import faker from "@faker-js/faker";
 
@@ -8,25 +8,34 @@ import { UseCaseStub, UseCaseStubInput } from "./mocks/mockUseCase";
 
 const makeSut = () => new UseCaseStub();
 
-const validatorSpy = jest.spyOn(classValidator, "validateOrReject").mockResolvedValue(null);
+jest.mock("class-validator", () => {
+  const originalModule = jest.requireActual("class-validator");
 
-const fakeParamData = { data: faker.random.word() };
+  return {
+    ...originalModule,
+    validateOrReject: jest.fn().mockResolvedValue(null),
+  };
+});
+
+const fakeParams = { data: faker.random.word() };
 
 describe("ValidateParams Decorator", () => {
   it("Should call validator with correct input", async () => {
     const sut = makeSut();
-    await sut.execute(fakeParamData);
+    await sut.execute(fakeParams);
 
-    expect(validatorSpy).toHaveBeenCalledTimes(1);
-    expect(validatorSpy).toHaveBeenCalledWith(fakeParamData, expect.anything());
+    expect(validateOrReject).toHaveBeenCalledTimes(1);
+    expect(validateOrReject).toHaveBeenCalledWith(fakeParams, expect.anything());
   });
 
   it("Should throw ValidationErrors if validator throws", async () => {
     const sut = makeSut();
-    const fakeValidatorError = new classValidator.ValidationError();
+    const fakeValidatorError = new ValidationError();
 
-    validatorSpy.mockRejectedValueOnce([fakeValidatorError, { ...fakeValidatorError, constraints: { data: "error" } }]);
-    const promise = sut.execute(fakeParamData);
+    jest
+      .mocked(validateOrReject)
+      .mockRejectedValueOnce([fakeValidatorError, { ...fakeValidatorError, constraints: { data: "error" } }]);
+    const promise = sut.execute(fakeParams);
 
     await expect(promise).rejects.toEqual(new ValidationErrors(["error"]));
   });
@@ -40,9 +49,9 @@ describe("ValidateParams Decorator", () => {
     }
 
     const sut = new UseCaseStub();
-    const result = await sut.execute(fakeParamData);
+    const result = await sut.execute(fakeParams);
 
     expect(result).toBeNull();
-    expect(validatorSpy).toHaveBeenCalledTimes(0);
+    expect(validateOrReject).toHaveBeenCalledTimes(0);
   });
 });
