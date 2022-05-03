@@ -1,16 +1,18 @@
 import { Encrypter } from "@domain/ports/crypt/Encrypter";
 import { CreateAdminRepository } from "@domain/ports/repositories/admin/CreateAdminRepository";
+import { FindAdminByEmailRepository } from "@domain/ports/repositories/admin/FindAdminByEmailRepository";
 import { DbCreateAdminUseCase } from "@domain/useCases/admin/DbCreateAdminUseCase";
-import { ValidationErrors } from "@domain/validator";
+import { EmailAlreadyExistsError } from "@domain/useCases/admin/errors";
+import { ValidationError } from "@domain/validator/errors";
 import { fakeAdminEntity, fakeCreateAdminParams } from "@tests/domain/fakes/fakeAdmin";
 
 type MockedEncrypter = jest.Mocked<Encrypter>;
-type MockedCreateAdminRepository = jest.Mocked<CreateAdminRepository>;
+type MockedAdminRepository = jest.Mocked<CreateAdminRepository & FindAdminByEmailRepository>;
 
 interface SutTypes {
   sut: DbCreateAdminUseCase;
   encrypterMock: MockedEncrypter;
-  createAdminRepositoryMock: MockedCreateAdminRepository;
+  adminRepositoryMock: MockedAdminRepository;
 }
 
 const createAdminParams = fakeCreateAdminParams();
@@ -22,24 +24,44 @@ const makeEncrypterMock = () => {
   return encrypter;
 };
 
-const makeCreateAdminRepositoryMock = () => {
-  const createAdminRepository: MockedCreateAdminRepository = { create: jest.fn() };
-  createAdminRepository.create.mockResolvedValue(admin);
-  return createAdminRepository;
+const makeAdminRepositoryMock = () => {
+  const adminRepository: MockedAdminRepository = { create: jest.fn(), findByEmail: jest.fn() };
+  adminRepository.create.mockResolvedValue(admin);
+  return adminRepository;
 };
 
 const makeSut = (): SutTypes => {
   const encrypterMock = makeEncrypterMock();
-  const createAdminRepositoryMock = makeCreateAdminRepositoryMock();
-  const sut = new DbCreateAdminUseCase(encrypterMock, createAdminRepositoryMock);
-  return { sut, encrypterMock, createAdminRepositoryMock };
+  const adminRepositoryMock = makeAdminRepositoryMock();
+  const sut = new DbCreateAdminUseCase(encrypterMock, adminRepositoryMock);
+  return { sut, encrypterMock, adminRepositoryMock };
 };
 
 describe("DbCreateAdminUseCase", () => {
-  it("Should throw ValidationErrors if any param is invalid", async () => {
+  it("Should throw ValidationError if any param is invalid", async () => {
     const { sut } = makeSut();
     const promise = sut.execute({ email: "", password: "" });
-    await expect(promise).rejects.toThrowError(ValidationErrors);
+    await expect(promise).rejects.toThrowError(ValidationError);
+  });
+
+  it("Should call AdminRepository.findByEmail with email", async () => {
+    const { sut, adminRepositoryMock } = makeSut();
+    await sut.execute(createAdminParams);
+
+    expect(adminRepositoryMock.findByEmail).toBeCalledTimes(1);
+    expect(adminRepositoryMock.findByEmail).toBeCalledWith(createAdminParams.email);
+  });
+
+  it("Should throw if AdminRepository.findByEmail throws", async () => {
+    const { sut, adminRepositoryMock } = makeSut();
+    adminRepositoryMock.findByEmail.mockRejectedValueOnce(new Error());
+    await expect(sut.execute(createAdminParams)).rejects.toThrow();
+  });
+
+  it("Should throw EmailAlreadyExistsError if already exists admin with same email", async () => {
+    const { sut, adminRepositoryMock } = makeSut();
+    adminRepositoryMock.findByEmail.mockResolvedValue(fakeAdminEntity());
+    await expect(sut.execute(createAdminParams)).rejects.toThrowError(EmailAlreadyExistsError);
   });
 
   it("Should call Encrypter.encrypt with password", async () => {
@@ -54,21 +76,21 @@ describe("DbCreateAdminUseCase", () => {
     const { sut, encrypterMock } = makeSut();
 
     encrypterMock.encrypt.mockRejectedValueOnce(new Error());
-    await expect(sut.execute(createAdminParams)).rejects.toThrowError(Error);
+    await expect(sut.execute(createAdminParams)).rejects.toThrow();
   });
 
-  it("Should call CreateAdminRepository.create with correct values", async () => {
-    const { sut, createAdminRepositoryMock } = makeSut();
+  it("Should call AdminRepository.create with correct values", async () => {
+    const { sut, adminRepositoryMock } = makeSut();
     await sut.execute(createAdminParams);
 
-    expect(createAdminRepositoryMock.create).toBeCalledTimes(1);
-    expect(createAdminRepositoryMock.create).toBeCalledWith({ ...createAdminParams, password: "hashedPassword" });
+    expect(adminRepositoryMock.create).toBeCalledTimes(1);
+    expect(adminRepositoryMock.create).toBeCalledWith({ ...createAdminParams, password: "hashedPassword" });
   });
 
-  it("Should throw if CreateAdminRepository.create throws", async () => {
-    const { sut, createAdminRepositoryMock } = makeSut();
-    createAdminRepositoryMock.create.mockRejectedValueOnce(new Error());
-    await expect(sut.execute(createAdminParams)).rejects.toThrowError(Error);
+  it("Should throw if AdminRepository.create throws", async () => {
+    const { sut, adminRepositoryMock } = makeSut();
+    adminRepositoryMock.create.mockRejectedValueOnce(new Error());
+    await expect(sut.execute(createAdminParams)).rejects.toThrow();
   });
 
   it("Should return admin data on success", async () => {
