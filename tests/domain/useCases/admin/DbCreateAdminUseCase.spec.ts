@@ -35,7 +35,7 @@ const makeSut = (): SutTypes => {
   return { sut, encrypterMock, createAdminRepositoryMock };
 };
 
-describe("DbCreateAdmin UseCase", () => {
+describe("DbCreateAdminUseCase", () => {
   it("Should throw ValidationErrors if any param is invalid", async () => {
     const { sut } = makeSut();
     const promise = sut.execute({ email: "", password: "" });
@@ -57,7 +57,7 @@ describe("DbCreateAdmin UseCase", () => {
     await expect(sut.execute(createAdminParams)).rejects.toThrowError(Error);
   });
 
-  it("Should call CreateAdminRepository.create with correct data", async () => {
+  it("Should call CreateAdminRepository.create with correct values", async () => {
     const { sut, createAdminRepositoryMock } = makeSut();
     await sut.execute(createAdminParams);
 
@@ -71,9 +71,8 @@ describe("DbCreateAdmin UseCase", () => {
     await expect(sut.execute(createAdminParams)).rejects.toThrowError(Error);
   });
 
-  it("Should return Result on success", async () => {
+  it("Should return admin data on success", async () => {
     const { sut } = makeSut();
-
     const result = await sut.execute(createAdminParams);
     await expect(result).toMatchObject({ id: admin.id, email: admin.email });
   });

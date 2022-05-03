@@ -4,9 +4,9 @@ import faker from "@faker-js/faker";
 
 import { ValidateParams, ValidationErrors } from "../../../src/domain/validator";
 
-import { UseCaseStub, UseCaseStubInput } from "./mocks/mockUseCase";
+import { DummyUseCase, DummyUseCaseInput } from "./dummies/dummyUseCase";
 
-const makeSut = () => new UseCaseStub();
+const makeSut = () => new DummyUseCase();
 
 jest.mock("class-validator", () => {
   const originalModule = jest.requireActual("class-validator");
@@ -20,7 +20,7 @@ jest.mock("class-validator", () => {
 const fakeParams = { data: faker.random.word() };
 
 describe("ValidateParams Decorator", () => {
-  it("Should call validator with correct input", async () => {
+  it("Should call ClassValidator.validateOrReject with correct input", async () => {
     const sut = makeSut();
     await sut.execute(fakeParams);
 
@@ -28,7 +28,7 @@ describe("ValidateParams Decorator", () => {
     expect(validateOrReject).toHaveBeenCalledWith(fakeParams, expect.anything());
   });
 
-  it("Should throw ValidationErrors if validator throws", async () => {
+  it("Should throw ValidationErrors if ClassValidator.validateOrReject throws", async () => {
     const sut = makeSut();
     const fakeValidatorError = new ValidationError();
 
@@ -41,14 +41,14 @@ describe("ValidateParams Decorator", () => {
   });
 
   it("Should not validate undecorated params", async () => {
-    class UseCaseStub {
+    class DummyUseCase {
       @ValidateParams
-      public async execute(_input: UseCaseStubInput): Promise<void> {
+      public async execute(_input: DummyUseCaseInput): Promise<void> {
         return null;
       }
     }
 
-    const sut = new UseCaseStub();
+    const sut = new DummyUseCase();
     const result = await sut.execute(fakeParams);
 
     expect(result).toBeNull();

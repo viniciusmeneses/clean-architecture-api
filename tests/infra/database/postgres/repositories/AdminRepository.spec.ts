@@ -30,6 +30,16 @@ describe("AdminRepository", () => {
       expect(saveSpy).toHaveBeenCalledTimes(1);
     });
 
+    it("Should throw if Repository.save throws", async () => {
+      const sut = makeSut();
+      const { email, password } = fakeCreateAdminParams();
+
+      const repository = connection.getRepository(AdminSchema);
+      jest.spyOn(repository, "save").mockRejectedValueOnce(new Error());
+
+      await expect(sut.create({ email, password })).rejects.toThrow();
+    });
+
     it("Should return an admin on success", async () => {
       const sut = makeSut();
       const { email, password } = fakeCreateAdminParams();
