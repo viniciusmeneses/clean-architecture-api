@@ -1,6 +1,6 @@
 import { validateOrReject } from "class-validator";
 
-import { ValidationErrors } from "./ValidationErrors";
+import { ValidationError } from "./errors";
 
 export function ValidateParams(target: Object, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
   const method = descriptor.value;
@@ -22,7 +22,7 @@ export function ValidateParams(target: Object, propertyKey: string | symbol, des
           });
         }
       } catch (errors) {
-        throw new ValidationErrors(errors.flatMap((error) => Object.values(error.constraints ?? {})));
+        throw new ValidationError(errors.flatMap((error) => Object.values(error.constraints ?? {})));
       }
     }
 

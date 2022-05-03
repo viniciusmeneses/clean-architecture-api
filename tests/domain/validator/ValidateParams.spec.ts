@@ -1,8 +1,9 @@
-import { validateOrReject, ValidationError } from "class-validator";
+import { validateOrReject, ValidationError as ClassValidationError } from "class-validator";
 
+import { ValidationError } from "@domain/validator/errors";
 import faker from "@faker-js/faker";
 
-import { ValidateParams, ValidationErrors } from "../../../src/domain/validator";
+import { ValidateParams } from "../../../src/domain/validator";
 
 import { DummyUseCase, DummyUseCaseInput } from "./dummies/dummyUseCase";
 
@@ -28,16 +29,16 @@ describe("ValidateParams Decorator", () => {
     expect(validateOrReject).toHaveBeenCalledWith(fakeParams, expect.anything());
   });
 
-  it("Should throw ValidationErrors if ClassValidator.validateOrReject throws", async () => {
+  it("Should throw ValidationError if ClassValidator.validateOrReject throws", async () => {
     const sut = makeSut();
-    const fakeValidatorError = new ValidationError();
+    const fakeValidatorError = new ClassValidationError();
 
     jest
       .mocked(validateOrReject)
       .mockRejectedValueOnce([fakeValidatorError, { ...fakeValidatorError, constraints: { data: "error" } }]);
     const promise = sut.execute(fakeParams);
 
-    await expect(promise).rejects.toEqual(new ValidationErrors(["error"]));
+    await expect(promise).rejects.toEqual(new ValidationError(["error"]));
   });
 
   it("Should not validate undecorated params", async () => {
