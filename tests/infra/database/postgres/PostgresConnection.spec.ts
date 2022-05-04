@@ -8,10 +8,9 @@ import dataSource from "../../../../typeorm.config";
 jest.mock("../../../../typeorm.config", () => ({
   __esModule: true,
   default: {
-    isInitialized: true,
     initialize: jest.fn(),
     destroy: jest.fn(),
-    getRepository: jest.fn(() => new Repository(null, null)),
+    getRepository: jest.fn(),
   },
 }));
 
@@ -79,6 +78,7 @@ describe("PostgresConnection", () => {
   describe("getRepository", () => {
     test("Should return the repository instance on success", async () => {
       const sut = makeSut();
+      dataSourceMock.getRepository.mockReturnValueOnce(new Repository(DummyEntity, null));
       const repository = sut.getRepository(DummyEntity);
       expect(repository).toBeInstanceOf(Repository);
     });
