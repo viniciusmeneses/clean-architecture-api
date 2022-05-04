@@ -53,4 +53,40 @@ describe("AdminRepository", () => {
       expect(createdAdmin).toMatchObject(admin);
     });
   });
+
+  describe("findByEmail", () => {
+    it("Should call Repository.findOneBy", async () => {
+      const { sut, adminRepositoryMock } = makeSut();
+      const { email } = fakeAdminEntity();
+
+      await sut.findByEmail(email);
+      expect(adminRepositoryMock.findOneBy).toHaveBeenCalledTimes(1);
+    });
+
+    it("Should throw if Repository.findOneBy throws", async () => {
+      const { sut, adminRepositoryMock } = makeSut();
+      const { email } = fakeAdminEntity();
+
+      jest.spyOn(adminRepositoryMock, "findOneBy").mockRejectedValueOnce(new Error());
+      await expect(sut.findByEmail(email)).rejects.toThrow();
+    });
+
+    it("Should return an admin if one exists with same email", async () => {
+      const { sut, adminRepositoryMock } = makeSut();
+      const admin = fakeAdminEntity();
+
+      jest.spyOn(adminRepositoryMock, "findOneBy").mockResolvedValueOnce(admin);
+
+      const foundAdmin = await sut.findByEmail(admin.email);
+      expect(foundAdmin).toMatchObject(admin);
+    });
+
+    it("Should not return an admin if none exists with same email", async () => {
+      const { sut } = makeSut();
+      const admin = fakeAdminEntity();
+
+      const noneAdmin = await sut.findByEmail(admin.email);
+      expect(noneAdmin).toBeFalsy();
+    });
+  });
 });
