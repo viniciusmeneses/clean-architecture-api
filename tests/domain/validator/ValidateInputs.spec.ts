@@ -5,7 +5,16 @@ import faker from "@faker-js/faker";
 
 import { ValidateInputs } from "../../../src/domain/validator";
 
-import { DummyUseCase, DummyUseCaseInput } from "./dummies/dummyUseCase";
+export class DummyUseCaseInput {
+  public data: string;
+}
+
+export class DummyUseCase {
+  @ValidateInputs
+  public async execute(_input: DummyUseCaseInput): Promise<void> {
+    return null;
+  }
+}
 
 const makeSut = () => new DummyUseCase();
 
@@ -18,15 +27,15 @@ jest.mock("class-validator", () => {
   };
 });
 
-const fakeParams = { data: faker.random.word() };
+const fakeInput = { data: faker.random.word() };
 
 describe("ValidateInputs Decorator", () => {
   it("Should call ClassValidator.validateOrReject with correct input", async () => {
     const sut = makeSut();
-    await sut.execute(fakeParams);
+    await sut.execute(fakeInput);
 
     expect(validateOrReject).toHaveBeenCalledTimes(1);
-    expect(validateOrReject).toHaveBeenCalledWith(fakeParams, expect.anything());
+    expect(validateOrReject).toHaveBeenCalledWith(fakeInput, expect.anything());
   });
 
   it("Should throw ValidationError if ClassValidator.validateOrReject throws", async () => {
@@ -36,21 +45,21 @@ describe("ValidateInputs Decorator", () => {
     jest
       .mocked(validateOrReject)
       .mockRejectedValueOnce([fakeValidatorError, { ...fakeValidatorError, constraints: { data: "error" } }]);
-    const promise = sut.execute(fakeParams);
+    const promise = sut.execute(fakeInput);
 
     await expect(promise).rejects.toEqual(new ValidationError(["error"]));
   });
 
-  it("Should not validate undecorated inputs", async () => {
+  it("Should not validate inputs that aren't a class", async () => {
     class DummyUseCase {
       @ValidateInputs
-      public async execute(_input: DummyUseCaseInput): Promise<void> {
+      public async execute(_input: string): Promise<void> {
         return null;
       }
     }
 
     const sut = new DummyUseCase();
-    const result = await sut.execute(fakeParams);
+    const result = await sut.execute(fakeInput.data);
 
     expect(result).toBeNull();
     expect(validateOrReject).toHaveBeenCalledTimes(0);
