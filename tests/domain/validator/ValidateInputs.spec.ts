@@ -3,7 +3,7 @@ import { validateOrReject, ValidationError as ClassValidationError } from "class
 import { ValidationError } from "@domain/validator/errors";
 import faker from "@faker-js/faker";
 
-import { ValidateParams } from "../../../src/domain/validator";
+import { ValidateInputs } from "../../../src/domain/validator";
 
 import { DummyUseCase, DummyUseCaseInput } from "./dummies/dummyUseCase";
 
@@ -20,7 +20,7 @@ jest.mock("class-validator", () => {
 
 const fakeParams = { data: faker.random.word() };
 
-describe("ValidateParams Decorator", () => {
+describe("ValidateInputs Decorator", () => {
   it("Should call ClassValidator.validateOrReject with correct input", async () => {
     const sut = makeSut();
     await sut.execute(fakeParams);
@@ -41,9 +41,9 @@ describe("ValidateParams Decorator", () => {
     await expect(promise).rejects.toEqual(new ValidationError(["error"]));
   });
 
-  it("Should not validate undecorated params", async () => {
+  it("Should not validate undecorated inputs", async () => {
     class DummyUseCase {
-      @ValidateParams
+      @ValidateInputs
       public async execute(_input: DummyUseCaseInput): Promise<void> {
         return null;
       }

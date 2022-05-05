@@ -1,3 +1,3 @@
 export * from "./errors";
-export * from "./Param";
-export * from "./ValidateParams";
+export * from "./Input";
+export * from "./ValidateInputs";

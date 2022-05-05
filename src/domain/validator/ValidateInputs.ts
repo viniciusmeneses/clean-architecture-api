@@ -2,20 +2,20 @@ import { validateOrReject } from "class-validator";
 
 import { ValidationError } from "./errors";
 
-export function ValidateParams(target: Object, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
+export function ValidateInputs(target: Object, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
   const method = descriptor.value;
 
-  descriptor.value = async function (...params) {
-    const validableParams: { [key in string]: new () => unknown } = Reflect.getMetadata(
-      "validator:params",
+  descriptor.value = async function (...inputs) {
+    const validableInputs: { [key in string]: new () => unknown } = Reflect.getMetadata(
+      "validator:inputs",
       target,
       propertyKey
     );
 
-    if (validableParams) {
+    if (validableInputs) {
       try {
-        for (const [paramIndex, ParamClass] of Object.entries(validableParams)) {
-          const instance = Object.assign(new ParamClass(), params[paramIndex]);
+        for (const [inputIndex, InputClass] of Object.entries(validableInputs)) {
+          const instance = Object.assign(new InputClass(), inputs[inputIndex]);
           await validateOrReject(instance, {
             validationError: { target: false },
             forbidUnknownValues: true,
@@ -26,7 +26,7 @@ export function ValidateParams(target: Object, propertyKey: string | symbol, des
       }
     }
 
-    return await method.apply(this, params);
+    return await method.apply(this, inputs);
   };
 
   return descriptor;
