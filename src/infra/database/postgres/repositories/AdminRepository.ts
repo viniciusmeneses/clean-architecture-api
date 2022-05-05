@@ -1,4 +1,3 @@
-import { Admin } from "@domain/entities/Admin";
 import { CreateAdminRepository, FindAdminByEmailRepository } from "@domain/ports/repositories/admin";
 
 import { Repository } from "../Repository";
