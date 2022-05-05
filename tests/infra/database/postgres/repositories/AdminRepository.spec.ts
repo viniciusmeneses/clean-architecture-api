@@ -3,9 +3,9 @@ import { Repository } from "typeorm";
 import { Admin } from "@domain/entities/Admin";
 import { AdminRepository, PostgresConnection } from "@infra/database/postgres";
 import { AdminSchema } from "@infra/database/postgres/schemas/AdminSchema";
-import { fakeAdminEntity } from "@tests/domain/fakes/fakeAdmin";
+import { makeFakeAdmin } from "@tests/domain/fakes/admin";
 
-import { fakeCreateAdminParams } from "../fakes/fakeAdmin";
+import { makeFakeCreateAdminInput } from "../fakes/admin";
 
 interface SutTypes {
   sut: AdminRepository;
@@ -24,67 +24,56 @@ const makeSut = (): SutTypes => {
   return { sut, adminRepositoryMock };
 };
 
+const fakeAdmin = makeFakeAdmin();
+const fakeCreateAdminInput = makeFakeCreateAdminInput();
+
 describe("AdminRepository", () => {
   describe("create", () => {
     it("Should call Repository.save", async () => {
       const { sut, adminRepositoryMock } = makeSut();
-      const params = fakeCreateAdminParams();
-
-      await sut.create(params);
+      await sut.create(fakeCreateAdminInput);
       expect(adminRepositoryMock.save).toHaveBeenCalledTimes(1);
     });
 
     it("Should throw if Repository.save throws", async () => {
       const { sut, adminRepositoryMock } = makeSut();
-      const params = fakeCreateAdminParams();
-
       jest.spyOn(adminRepositoryMock, "save").mockRejectedValueOnce(new Error());
-      await expect(sut.create(params)).rejects.toThrow();
+      await expect(sut.create(fakeCreateAdminInput)).rejects.toThrow();
     });
 
     it("Should return an admin on success", async () => {
       const { sut, adminRepositoryMock } = makeSut();
-      const admin = fakeAdminEntity();
-
-      jest.spyOn(adminRepositoryMock, "save").mockResolvedValueOnce(admin);
-
-      const createdAdmin = await sut.create({ email: admin.email, password: admin.password });
-      expect(createdAdmin).toMatchObject(admin);
+      jest.spyOn(adminRepositoryMock, "save").mockResolvedValueOnce(fakeAdmin);
+      const createdAdmin = await sut.create(fakeCreateAdminInput);
+      expect(createdAdmin).toMatchObject(fakeAdmin);
     });
   });
 
   describe("findByEmail", () => {
     it("Should call Repository.findOneBy", async () => {
       const { sut, adminRepositoryMock } = makeSut();
-      const { email } = fakeAdminEntity();
-
-      await sut.findByEmail(email);
+      await sut.findByEmail(fakeAdmin.email);
       expect(adminRepositoryMock.findOneBy).toHaveBeenCalledTimes(1);
     });
 
     it("Should throw if Repository.findOneBy throws", async () => {
       const { sut, adminRepositoryMock } = makeSut();
-      const { email } = fakeAdminEntity();
-
       jest.spyOn(adminRepositoryMock, "findOneBy").mockRejectedValueOnce(new Error());
-      await expect(sut.findByEmail(email)).rejects.toThrow();
+      await expect(sut.findByEmail(fakeAdmin.email)).rejects.toThrow();
     });
 
     it("Should return an admin if one exists with same email", async () => {
       const { sut, adminRepositoryMock } = makeSut();
-      const admin = fakeAdminEntity();
 
-      jest.spyOn(adminRepositoryMock, "findOneBy").mockResolvedValueOnce(admin);
+      jest.spyOn(adminRepositoryMock, "findOneBy").mockResolvedValueOnce(fakeAdmin);
+      const foundAdmin = await sut.findByEmail(fakeAdmin.email);
 
-      const foundAdmin = await sut.findByEmail(admin.email);
-      expect(foundAdmin).toMatchObject(admin);
+      expect(foundAdmin).toMatchObject(fakeAdmin);
     });
 
     it("Should not return an admin if none exists with same email", async () => {
       const { sut } = makeSut();
-      const admin = fakeAdminEntity();
-
-      const noneAdmin = await sut.findByEmail(admin.email);
+      const noneAdmin = await sut.findByEmail(fakeAdmin.email);
       expect(noneAdmin).toBeFalsy();
     });
   });

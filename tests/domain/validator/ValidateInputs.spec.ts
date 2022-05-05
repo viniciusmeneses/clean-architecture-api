@@ -5,19 +5,6 @@ import faker from "@faker-js/faker";
 
 import { ValidateInputs } from "../../../src/domain/validator";
 
-export class DummyUseCaseInput {
-  public data: string;
-}
-
-export class DummyUseCase {
-  @ValidateInputs
-  public async execute(_input: DummyUseCaseInput): Promise<void> {
-    return null;
-  }
-}
-
-const makeSut = () => new DummyUseCase();
-
 jest.mock("class-validator", () => {
   const originalModule = jest.requireActual("class-validator");
 
@@ -26,6 +13,19 @@ jest.mock("class-validator", () => {
     validateOrReject: jest.fn().mockResolvedValue(null),
   };
 });
+
+class UseCaseStubInput {
+  public data: string;
+}
+
+class UseCaseStub {
+  @ValidateInputs
+  public async execute(_input: UseCaseStubInput): Promise<void> {
+    return null;
+  }
+}
+
+const makeSut = () => new UseCaseStub();
 
 const fakeInput = { data: faker.random.word() };
 
@@ -51,14 +51,14 @@ describe("ValidateInputs Decorator", () => {
   });
 
   it("Should not validate inputs that aren't a class", async () => {
-    class DummyUseCase {
+    class UseCaseStub {
       @ValidateInputs
       public async execute(_input: string): Promise<void> {
         return null;
       }
     }
 
-    const sut = new DummyUseCase();
+    const sut = new UseCaseStub();
     const result = await sut.execute(fakeInput.data);
 
     expect(result).toBeNull();
