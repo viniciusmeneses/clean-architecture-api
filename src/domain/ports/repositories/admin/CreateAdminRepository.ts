@@ -1,11 +1,14 @@
 import { Admin } from "@domain/entities/Admin";
-import { CreateAdminUseCase } from "@domain/ports/useCases/admin/CreateAdminUseCase";
 
 export interface CreateAdminRepository {
-  create(data: CreateAdminRepository.Params): Promise<CreateAdminRepository.Result>;
+  create(data: CreateAdminRepository.Input): Promise<CreateAdminRepository.Result>;
 }
 
 export namespace CreateAdminRepository {
-  export type Params = CreateAdminUseCase.Params;
+  export interface Input {
+    email: string;
+    password: string;
+  }
+
   export type Result = Admin;
 }

@@ -35,7 +35,7 @@ const makeSut = (): SutTypes => {
   return { sut, encrypterMock, adminRepositoryMock };
 };
 
-describe("DbCreateAdminUseCase", () => {
+describe("CreateAdminUseCase", () => {
   it("Should throw ValidationError if any param is invalid", async () => {
     const { sut } = makeSut();
     const promise = sut.execute({ email: "", password: "" });

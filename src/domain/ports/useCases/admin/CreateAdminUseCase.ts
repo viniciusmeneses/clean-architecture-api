@@ -1,11 +1,13 @@
 import { IsEmail, Matches, MinLength } from "class-validator";
 
+import { Admin } from "@domain/entities/Admin";
+
 export interface CreateAdminUseCase {
-  execute(data: CreateAdminUseCase.Params): Promise<CreateAdminUseCase.Result>;
+  execute(data: CreateAdminUseCase.Input): Promise<CreateAdminUseCase.Result>;
 }
 
 export namespace CreateAdminUseCase {
-  export class Params {
+  export class Input {
     @IsEmail()
     public email: string;
 
@@ -14,8 +16,5 @@ export namespace CreateAdminUseCase {
     public password: string;
   }
 
-  export interface Result {
-    id: string;
-    email: string;
-  }
+  export type Result = Admin;
 }

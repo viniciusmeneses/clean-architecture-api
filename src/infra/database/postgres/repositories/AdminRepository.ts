@@ -5,13 +5,13 @@ import { Repository } from "../Repository";
 import { AdminSchema } from "../schemas/AdminSchema";
 
 export class AdminRepository extends Repository implements CreateAdminRepository, FindAdminByEmailRepository {
-  public async create({ email, password }: CreateAdminRepository.Params): Promise<Admin> {
+  public async create({ email, password }: CreateAdminRepository.Input): Promise<CreateAdminRepository.Result> {
     const repository = this.connection.getRepository(AdminSchema);
     const admin = repository.create({ email, password });
     return repository.save(admin);
   }
 
-  public findByEmail(email: string): Promise<Admin> {
+  public findByEmail(email: string): Promise<FindAdminByEmailRepository.Result> {
     const repository = this.connection.getRepository(AdminSchema);
     return repository.findOneBy({ email });
   }

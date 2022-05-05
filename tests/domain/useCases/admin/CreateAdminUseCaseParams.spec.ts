@@ -4,8 +4,8 @@ import { fakeCreateAdminParams } from "@tests/domain/fakes/fakeAdmin";
 
 import { validateSut } from "../../helpers";
 
-describe("CreateAdminUseCaseParams", () => {
-  const makeSut = (data: object) => Object.assign(new CreateAdminUseCase.Params(), data);
+describe("CreateAdminUseCase Input", () => {
+  const makeSut = (data: object) => Object.assign(new CreateAdminUseCase.Input(), data);
 
   describe("email", () => {
     it("Should throw if email is invalid", async () => {
@@ -26,7 +26,7 @@ describe("CreateAdminUseCaseParams", () => {
     });
   });
 
-  it("Should not throw if params are valid", async () => {
+  it("Should not throw if input is valid", async () => {
     const sut = makeSut(fakeCreateAdminParams());
     await expect(validateSut(sut)).resolves.toBeUndefined();
   });

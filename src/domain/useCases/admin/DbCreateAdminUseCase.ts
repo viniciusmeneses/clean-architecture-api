@@ -12,12 +12,11 @@ export class DbCreateAdminUseCase implements CreateAdminUseCase {
   ) {}
 
   @ValidateParams
-  public async execute(@Param data: CreateAdminUseCase.Params): Promise<CreateAdminUseCase.Result> {
+  public async execute(@Param data: CreateAdminUseCase.Input): Promise<CreateAdminUseCase.Result> {
     const existingAdmin = await this.adminRepository.findByEmail(data.email);
     if (existingAdmin) throw new EmailAlreadyExistsError(existingAdmin.email);
 
     const encryptedPassword = await this.encrypter.encrypt(data.password);
-    const admin = await this.adminRepository.create({ ...data, password: encryptedPassword });
-    return { id: admin.id, email: admin.email };
+    return this.adminRepository.create({ ...data, password: encryptedPassword });
   }
 }

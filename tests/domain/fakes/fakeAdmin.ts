@@ -10,7 +10,7 @@ export const fakeAdminEntity = (): Admin => ({
   updatedAt: faker.date.recent(),
 });
 
-export const fakeCreateAdminParams = (): CreateAdminUseCase.Params => ({
+export const fakeCreateAdminParams = (): CreateAdminUseCase.Input => ({
   email: faker.internet.email(),
   password: faker.internet.password(8) + faker.datatype.number(10),
 });
