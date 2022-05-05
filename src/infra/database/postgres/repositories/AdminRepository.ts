@@ -1,6 +1,5 @@
 import { Admin } from "@domain/entities/Admin";
-import { CreateAdminRepository } from "@domain/ports/repositories/admin/CreateAdminRepository";
-import { FindAdminByEmailRepository } from "@domain/ports/repositories/admin/FindAdminByEmailRepository";
+import { CreateAdminRepository, FindAdminByEmailRepository } from "@domain/ports/repositories/admin";
 
 import { Repository } from "../Repository";
 import { AdminSchema } from "../schemas/AdminSchema";

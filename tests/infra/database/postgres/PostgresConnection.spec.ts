@@ -1,7 +1,6 @@
 import { DataSource, Repository } from "typeorm";
 
-import { PostgresConnection } from "@infra/database/postgres";
-import { NotConnectedError } from "@infra/database/postgres/errors";
+import { NotConnectedError, PostgresConnection } from "@infra/database/postgres";
 
 import dataSource from "../../../../typeorm.config";
 

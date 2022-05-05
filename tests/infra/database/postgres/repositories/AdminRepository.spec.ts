@@ -1,8 +1,7 @@
 import { Repository } from "typeorm";
 
 import { Admin } from "@domain/entities/Admin";
-import { PostgresConnection } from "@infra/database/postgres";
-import { AdminRepository } from "@infra/database/postgres/repositories/AdminRepository";
+import { AdminRepository, PostgresConnection } from "@infra/database/postgres";
 import { AdminSchema } from "@infra/database/postgres/schemas/AdminSchema";
 import { fakeAdminEntity } from "@tests/domain/fakes/fakeAdmin";
 

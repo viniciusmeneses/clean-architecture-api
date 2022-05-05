@@ -1,9 +1,7 @@
 import { Encrypter } from "@domain/ports/crypt/Encrypter";
-import { CreateAdminRepository } from "@domain/ports/repositories/admin/CreateAdminRepository";
-import { FindAdminByEmailRepository } from "@domain/ports/repositories/admin/FindAdminByEmailRepository";
-import { DbCreateAdminUseCase } from "@domain/useCases/admin/DbCreateAdminUseCase";
-import { EmailAlreadyExistsError } from "@domain/useCases/admin/errors";
-import { ValidationError } from "@domain/validator/errors";
+import { CreateAdminRepository, FindAdminByEmailRepository } from "@domain/ports/repositories/admin";
+import { DbCreateAdminUseCase, EmailAlreadyExistsError } from "@domain/useCases/admin";
+import { ValidationError } from "@domain/validator";
 import { fakeAdminEntity, fakeCreateAdminParams } from "@tests/domain/fakes/fakeAdmin";
 
 type MockedEncrypter = jest.Mocked<Encrypter>;

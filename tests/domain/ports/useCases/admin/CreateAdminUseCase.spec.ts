@@ -1,4 +1,4 @@
-import { CreateAdminUseCase } from "@domain/ports/useCases/admin/CreateAdminUseCase";
+import { CreateAdminUseCase } from "@domain/ports/useCases/admin";
 import faker from "@faker-js/faker";
 import { fakeCreateAdminParams } from "@tests/domain/fakes/fakeAdmin";
 

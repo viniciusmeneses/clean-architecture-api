@@ -1,5 +1,4 @@
-import { PostgresConnection } from "@infra/database/postgres";
-import { Repository } from "@infra/database/postgres/Repository";
+import { PostgresConnection, Repository } from "@infra/database/postgres";
 
 const makeSut = () => new Repository();
 

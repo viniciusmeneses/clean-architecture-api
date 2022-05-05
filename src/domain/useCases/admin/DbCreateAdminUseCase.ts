@@ -1,7 +1,6 @@
 import { Encrypter } from "@domain/ports/crypt/Encrypter";
-import { CreateAdminRepository } from "@domain/ports/repositories/admin/CreateAdminRepository";
-import { FindAdminByEmailRepository } from "@domain/ports/repositories/admin/FindAdminByEmailRepository";
-import { CreateAdminUseCase } from "@domain/ports/useCases/admin/CreateAdminUseCase";
+import { CreateAdminRepository, FindAdminByEmailRepository } from "@domain/ports/repositories/admin";
+import { CreateAdminUseCase } from "@domain/ports/useCases/admin";
 import { Param, ValidateParams } from "@domain/validator";
 
 import { EmailAlreadyExistsError } from "./errors";
