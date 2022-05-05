@@ -2,11 +2,11 @@ import { CreateAdminUseCase } from "@domain/ports/useCases/admin";
 import faker from "@faker-js/faker";
 import { fakeCreateAdminParams } from "@tests/domain/fakes/fakeAdmin";
 
-import { validateSut } from "../../helpers/validateSut";
-
-const makeSut = (data: object) => Object.assign(new CreateAdminUseCase.Params(), data);
+import { validateSut } from "../../helpers";
 
 describe("CreateAdminUseCaseParams", () => {
+  const makeSut = (data: object) => Object.assign(new CreateAdminUseCase.Params(), data);
+
   describe("email", () => {
     it("Should throw if email is invalid", async () => {
       const sut = makeSut({ email: faker.random.word() });
