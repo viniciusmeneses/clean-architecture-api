@@ -1,1 +1,2 @@
-export * from "./ValidationError";
+export * from "./FieldValidationError";
+export * from "./ValidationErrors";

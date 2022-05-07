@@ -1,6 +1,7 @@
-import { validateOrReject } from "class-validator";
+import { validateOrReject, ValidationError } from "class-validator";
 
-import { ValidationError } from "./errors";
+import { FieldValidationError } from "./errors/FieldValidationError";
+import { ValidationErrors } from "./errors";
 
 export function ValidateInputs(target: Object, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
   const method = descriptor.value;
@@ -21,7 +22,14 @@ export function ValidateInputs(target: Object, propertyKey: string | symbol, des
 
       await Promise.all(validationPromises);
     } catch (errors) {
-      throw new ValidationError(errors.flatMap((error) => Object.values(error.constraints ?? {})));
+      const validationErrors = errors as ValidationError[];
+      throw new ValidationErrors(
+        validationErrors
+          .filter(({ constraints }) => constraints)
+          .flatMap((error) =>
+            Object.values(error.constraints).map((message) => new FieldValidationError(error.property, message))
+          )
+      );
     }
 
     return await method.apply(this, inputs);

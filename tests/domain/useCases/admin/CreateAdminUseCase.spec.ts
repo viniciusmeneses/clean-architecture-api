@@ -1,7 +1,7 @@
 import { Encrypter } from "@domain/ports/crypt/Encrypter";
 import { CreateAdminRepository, FindAdminByEmailRepository } from "@domain/ports/repositories/admin";
 import { DbCreateAdminUseCase, EmailAlreadyExistsError } from "@domain/useCases/admin";
-import { ValidationError } from "@domain/validator";
+import { ValidationErrors } from "@domain/validator";
 import { makeFakeAdmin, makeFakeCreateAdminInput } from "@tests/domain/fakes/admin";
 
 type MockedEncrypter = jest.Mocked<Encrypter>;
@@ -36,10 +36,10 @@ const makeSut = (): SutTypes => {
 };
 
 describe("CreateAdminUseCase", () => {
-  it("Should throw ValidationError if any param is invalid", async () => {
+  it("Should throw ValidationErrors if any param is invalid", async () => {
     const { sut } = makeSut();
     const promise = sut.execute({ email: "", password: "" });
-    await expect(promise).rejects.toThrowError(ValidationError);
+    await expect(promise).rejects.toThrowError(ValidationErrors);
   });
 
   it("Should call AdminRepository.findByEmail with email", async () => {

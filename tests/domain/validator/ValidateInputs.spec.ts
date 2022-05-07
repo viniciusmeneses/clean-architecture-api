@@ -1,6 +1,6 @@
 import { validateOrReject, ValidationError as ClassValidationError } from "class-validator";
 
-import { ValidationError } from "@domain/validator/errors";
+import { FieldValidationError, ValidationErrors } from "@domain/validator/errors";
 import faker from "@faker-js/faker";
 
 import { ValidateInputs } from "../../../src/domain/validator";
@@ -44,10 +44,13 @@ describe("ValidateInputs Decorator", () => {
 
     jest
       .mocked(validateOrReject)
-      .mockRejectedValueOnce([fakeValidatorError, { ...fakeValidatorError, constraints: { data: "error" } }]);
+      .mockRejectedValueOnce([
+        fakeValidatorError,
+        { ...fakeValidatorError, property: "data", constraints: { data: "error" } },
+      ]);
     const promise = sut.execute(fakeInput);
 
-    await expect(promise).rejects.toEqual(new ValidationError(["error"]));
+    await expect(promise).rejects.toEqual(new ValidationErrors([new FieldValidationError("data", "error")]));
   });
 
   it("Should not validate inputs that aren't a class", async () => {
