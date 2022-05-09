@@ -16,5 +16,4 @@ module.exports = {
     "@tests/(.*)": "<rootDir>/tests/$1",
   },
   transform: { "^.+\\.ts$": ["ts-jest"] },
-  setupFiles: ["dotenv/config"],
 };

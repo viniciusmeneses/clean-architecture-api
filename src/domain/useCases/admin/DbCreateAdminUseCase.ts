@@ -1,3 +1,5 @@
+import { inject } from "tsyringe";
+
 import { Encrypter } from "@domain/ports/crypt/Encrypter";
 import { CreateAdminRepository, FindAdminByEmailRepository } from "@domain/ports/repositories/admin";
 import { CreateAdminUseCase } from "@domain/ports/useCases/admin";
@@ -7,8 +9,8 @@ import { EmailAlreadyExistsError } from "./errors";
 
 export class DbCreateAdminUseCase implements CreateAdminUseCase {
   public constructor(
-    private encrypter: Encrypter,
-    private adminRepository: CreateAdminRepository & FindAdminByEmailRepository
+    @inject("Encrypter") private encrypter: Encrypter,
+    @inject("AdminRepository") private adminRepository: CreateAdminRepository & FindAdminByEmailRepository
   ) {}
 
   @ValidateInputs

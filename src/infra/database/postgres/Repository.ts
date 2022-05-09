@@ -1,5 +1,7 @@
+import { inject } from "tsyringe";
+
 import { PostgresConnection } from "./PostgresConnection";
 
 export class Repository {
-  public constructor(protected connection: PostgresConnection = PostgresConnection.getInstance()) {}
+  public constructor(@inject(PostgresConnection) protected connection: PostgresConnection) {}
 }

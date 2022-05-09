@@ -19,18 +19,11 @@ class DummyEntity {
 
 const dataSourceMock = dataSource as jest.Mocked<DataSource & { isInitialized: boolean }>;
 
-const makeSut = () => PostgresConnection.getInstance();
+const makeSut = () => new PostgresConnection(dataSourceMock);
 
 describe("PostgresConnection", () => {
   beforeEach(() => {
     dataSourceMock.isInitialized = true;
-  });
-
-  describe("getInstance", () => {
-    test("Should return the same instance", () => {
-      const sut = makeSut();
-      expect(sut).toBe(PostgresConnection.getInstance());
-    });
   });
 
   describe("connect", () => {

@@ -1,11 +1,14 @@
+import { inject, singleton } from "tsyringe";
+
 import { CreateAdminUseCase } from "@domain/ports/useCases/admin";
 import { EmailAlreadyExistsError } from "@domain/useCases/admin";
 import { ValidationErrors } from "@domain/validator";
 import { HttpResponse } from "@presentation/helpers";
 import { Controller, Http } from "@presentation/protocols";
 
+@singleton()
 export class CreateAdminController implements Controller {
-  public constructor(private createAdminUseCase: CreateAdminUseCase) {}
+  public constructor(@inject("CreateAdminUseCase") private createAdminUseCase: CreateAdminUseCase) {}
 
   public async handle(request: CreateAdminController.Request): Promise<Http.Response> {
     const { email, password } = request.body;

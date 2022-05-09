@@ -1,18 +1,11 @@
+import { inject, singleton } from "tsyringe";
 import { DataSource, EntityTarget, Repository } from "typeorm";
-
-import dataSource from "../../../../typeorm.config";
 
 import { NotConnectedError } from "./errors";
 
+@singleton()
 export class PostgresConnection {
-  private static instance: PostgresConnection;
-
-  public static getInstance() {
-    if (this.instance == null) this.instance = new PostgresConnection(dataSource);
-    return this.instance;
-  }
-
-  public constructor(private dataSource: DataSource) {}
+  public constructor(@inject("DataSource") private dataSource: DataSource) {}
 
   public async connect(): Promise<void> {
     if (!this.dataSource.isInitialized) await this.dataSource.initialize();

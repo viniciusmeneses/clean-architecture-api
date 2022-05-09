@@ -1,7 +1,7 @@
+import "dotenv/config";
+
 import { resolve } from "path";
 import { DataSource } from "typeorm";
-
-import "dotenv/config";
 
 const absolutePath = resolve(__dirname, "src", "infra", "database", "postgres");
 
