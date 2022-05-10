@@ -1,4 +1,4 @@
-import { inject } from "tsyringe";
+import { inject, singleton } from "tsyringe";
 
 import { Encrypter } from "@domain/ports/crypt/Encrypter";
 import { CreateAdminRepository, FindAdminByEmailRepository } from "@domain/ports/repositories/admin";
@@ -7,6 +7,7 @@ import { ValidateInputs } from "@domain/validator";
 
 import { EmailAlreadyExistsError } from "./errors";
 
+@singleton()
 export class DbCreateAdminUseCase implements CreateAdminUseCase {
   public constructor(
     @inject("Encrypter") private encrypter: Encrypter,

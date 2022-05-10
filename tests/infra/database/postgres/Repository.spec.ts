@@ -1,8 +1,6 @@
 import { PostgresConnection, Repository } from "@infra/database/postgres";
 
-import dataSource from "../../../../typeorm.config";
-
-const makeConnection = () => new PostgresConnection(dataSource);
+const makeConnection = () => new PostgresConnection();
 
 const makeSut = () => {
   const connection = makeConnection();

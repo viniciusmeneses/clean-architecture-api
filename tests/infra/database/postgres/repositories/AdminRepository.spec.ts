@@ -2,14 +2,13 @@ import { AdminRepository, PostgresConnection } from "@infra/database/postgres";
 import { AdminSchema } from "@infra/database/postgres/schemas/AdminSchema";
 import { makeFakeAdmin } from "@tests/domain/fakes/admin";
 
-import dataSource from "../../../../../typeorm.config";
 import { makeFakeCreateAdminInput } from "../fakes/admin";
 
 PostgresConnection.prototype.getRepository = jest
   .fn()
   .mockReturnValue({ create: jest.fn(), save: jest.fn(), findOneBy: jest.fn() });
 
-const connectionMock = new PostgresConnection(dataSource);
+const connectionMock = new PostgresConnection();
 const adminRepositoryMock = jest.mocked(connectionMock.getRepository(AdminSchema));
 
 const makeSut = () => new AdminRepository(connectionMock);
