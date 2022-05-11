@@ -12,7 +12,7 @@ export default new DataSource({
   username: DB_USERNAME,
   password: DB_PASSWORD,
   database: DB_NAME + (NODE_ENV === "test" ? "_test" : ""),
-  migrations: [resolve(__dirname, "migrations", "*.{js,ts}")],
-  entities: [resolve(__dirname, "schemas", "*.{js,ts}")],
+  migrations: [resolve(__dirname, "..", "migrations", "*.{js,ts}")],
+  entities: [resolve(__dirname, "..", "schemas", "*.{js,ts}")],
   synchronize: NODE_ENV !== "production",
 });
