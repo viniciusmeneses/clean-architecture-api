@@ -1,25 +1,14 @@
 import { DataSource, Repository } from "typeorm";
 
 import { NotConnectedError, PostgresConnection } from "@infra/database/postgres";
+import { dataSource } from "@infra/database/postgres/config";
 
 interface SutTypes {
   sut: PostgresConnection;
   dataSourceMock: jest.Mocked<DataSource & { isInitialized: boolean }>;
 }
 
-jest.mock("typeorm", () => {
-  const originalModule = jest.requireActual("typeorm");
-
-  return {
-    __esModule: true,
-    ...originalModule,
-    DataSource: jest.fn().mockImplementation(() => ({
-      initialize: jest.fn(),
-      destroy: jest.fn(),
-      getRepository: jest.fn(),
-    })),
-  };
-});
+jest.mock("@infra/database/postgres/config");
 
 class DummyEntity {
   public id: string;
@@ -27,7 +16,7 @@ class DummyEntity {
 
 const makeSut = (): SutTypes => {
   const sut = new PostgresConnection();
-  const dataSourceMock = sut["dataSource"] as SutTypes["dataSourceMock"];
+  const dataSourceMock = dataSource as SutTypes["dataSourceMock"];
   dataSourceMock.isInitialized = true;
   return { sut, dataSourceMock };
 };
@@ -49,7 +38,8 @@ describe("PostgresConnection", () => {
 
     test("Should throw if DataSource.initialize throws", async () => {
       const { sut, dataSourceMock } = makeSut();
-      jest.mocked(dataSourceMock.initialize).mockRejectedValue(new Error());
+      dataSourceMock.isInitialized = false;
+      dataSourceMock.initialize.mockRejectedValueOnce(new Error());
       await expect(sut.connect).rejects.toThrowError();
     });
   });
@@ -69,7 +59,7 @@ describe("PostgresConnection", () => {
 
     test("Should throw if DataSource.destroy throws", async () => {
       const { sut, dataSourceMock } = makeSut();
-      jest.mocked(dataSourceMock.destroy).mockRejectedValueOnce(new Error());
+      dataSourceMock.destroy.mockRejectedValueOnce(new Error());
       await expect(sut.disconnect()).rejects.toThrowError();
     });
   });
@@ -97,7 +87,7 @@ describe("PostgresConnection", () => {
 
     test("Should throw if DataSource.getRepository throws", async () => {
       const { sut, dataSourceMock } = makeSut();
-      jest.mocked(dataSourceMock.getRepository).mockImplementationOnce(() => {
+      dataSourceMock.getRepository.mockImplementationOnce(() => {
         throw new Error();
       });
       expect(() => sut.getRepository(DummyEntity)).toThrowError();
