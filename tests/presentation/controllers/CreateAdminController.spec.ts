@@ -59,14 +59,11 @@ describe("CreateAdminController", () => {
     expect(response).toEqual(HttpResponse.badRequest(validationErrors.errors));
   });
 
-  it("Should return internal server error if CreateAdminUseCase.execute throws another error", async () => {
+  it("Should throw if CreateAdminUseCase.execute throws uncaught error", async () => {
     const { sut, createAdminUseCaseMock } = makeSut();
     const error = new Error();
-
     jest.spyOn(createAdminUseCaseMock, "execute").mockRejectedValueOnce(error);
-    const response = await sut.handle(fakeRequest);
-
-    expect(response).toEqual(HttpResponse.serverError(error));
+    await expect(sut.handle(fakeRequest)).rejects.toThrowError(error);
   });
 
   it("Should return created admin on success", async () => {

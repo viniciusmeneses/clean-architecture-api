@@ -38,18 +38,4 @@ describe("HttpResponse", () => {
       expect(response.body).toEqual({ errors: [{ type: "Error", message: "error" }] });
     });
   });
-
-  describe("serverError", () => {
-    it("Should return status code 500", async () => {
-      const sut = makeSut();
-      const response = sut.serverError(fakeError);
-      expect(response.status).toBe(500);
-    });
-
-    it("Should return stacktrace as body", async () => {
-      const sut = makeSut();
-      const response = sut.serverError(fakeError);
-      expect(response.body).toBe(fakeError.stack);
-    });
-  });
 });

@@ -24,7 +24,7 @@ export class CreateAdminController implements Controller {
   private handleError(error: Error): Http.Response {
     if (error instanceof ValidationErrors) return HttpResponse.badRequest(error.errors);
     if (error instanceof EmailAlreadyExistsError) return HttpResponse.badRequest(error);
-    return HttpResponse.serverError(error);
+    throw error;
   }
 }
 

@@ -16,11 +16,4 @@ export class HttpResponse {
       body: { errors: errors.map(({ name, message }) => ({ type: name, message })) },
     };
   }
-
-  public static serverError(error: Error): Http.Response {
-    return {
-      status: 500,
-      body: error.stack,
-    };
-  }
 }

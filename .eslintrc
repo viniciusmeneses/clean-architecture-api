@@ -26,6 +26,7 @@
     "no-eq-null": "off",
     "eqeqeq": ["error", "always", { "null": "ignore" }],
     "max-nested-callbacks": ["error", 4],
+    "max-params": ["error", 4],
     "@typescript-eslint/no-parameter-properties": "off",
     "@typescript-eslint/method-signature-style": ["error", "method"],
     "@typescript-eslint/no-namespace": "off"
