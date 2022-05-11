@@ -2,7 +2,12 @@ module.exports = {
   roots: ["<rootDir>/src", "<rootDir>/tests"],
   coverageDirectory: "coverage",
   coverageProvider: "babel",
-  collectCoverageFrom: ["src/**/*.ts", "!src/**/index.ts"],
+  collectCoverageFrom: [
+    "src/**/*.ts",
+    "!src/**/index.ts",
+    "!src/main/**/*.ts",
+    "!src/infra/database/postgres/{migrations,config}/*.ts",
+  ],
   coverageReporters: ["lcov", "text"],
   testMatch: ["**/*.spec.ts"],
   testEnvironment: "node",
