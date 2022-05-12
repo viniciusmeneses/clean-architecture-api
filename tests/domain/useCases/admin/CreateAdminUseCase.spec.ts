@@ -1,6 +1,6 @@
 import { Encrypter } from "@domain/ports/crypt/Encrypter";
 import { CreateAdminRepository, FindAdminByEmailRepository } from "@domain/ports/repositories/admin";
-import { DbCreateAdminUseCase, EmailAlreadyExistsError } from "@domain/useCases/admin";
+import { AdminAlreadyExistsError, DbCreateAdminUseCase } from "@domain/useCases/admin";
 import { ValidationErrors } from "@domain/validator";
 import { makeFakeAdmin, makeFakeCreateAdminInput } from "@tests/domain/fakes/admin";
 
@@ -56,10 +56,10 @@ describe("CreateAdminUseCase", () => {
     await expect(sut.execute(fakeCreateAdminInput)).rejects.toThrow();
   });
 
-  it("Should throw EmailAlreadyExistsError if already exists admin with same email", async () => {
+  it("Should throw AdminAlreadyExistsError if already exists admin with same email", async () => {
     const { sut, adminRepositoryMock } = makeSut();
     adminRepositoryMock.findByEmail.mockResolvedValue(makeFakeAdmin());
-    await expect(sut.execute(fakeCreateAdminInput)).rejects.toThrowError(EmailAlreadyExistsError);
+    await expect(sut.execute(fakeCreateAdminInput)).rejects.toThrowError(AdminAlreadyExistsError);
   });
 
   it("Should call Encrypter.encrypt with password", async () => {

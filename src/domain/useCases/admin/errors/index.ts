@@ -1,1 +1,1 @@
-export * from "./EmailAlreadyExistsError";
+export * from "./AdminAlreadyExistsError";

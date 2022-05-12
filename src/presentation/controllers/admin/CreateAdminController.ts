@@ -1,7 +1,7 @@
 import { inject, singleton } from "tsyringe";
 
 import { CreateAdminUseCase } from "@domain/ports/useCases/admin";
-import { EmailAlreadyExistsError } from "@domain/useCases/admin";
+import { AdminAlreadyExistsError } from "@domain/useCases/admin";
 import { ValidationErrors } from "@domain/validator";
 import { HttpResponse } from "@presentation/helpers";
 import { Controller, Http } from "@presentation/protocols";
@@ -23,7 +23,7 @@ export class CreateAdminController implements Controller {
 
   private handleError(error: Error): Http.Response {
     if (error instanceof ValidationErrors) return HttpResponse.badRequest(error.errors);
-    if (error instanceof EmailAlreadyExistsError) return HttpResponse.badRequest(error);
+    if (error instanceof AdminAlreadyExistsError) return HttpResponse.badRequest(error);
     throw error;
   }
 }

@@ -1,5 +1,5 @@
 import { CreateAdminUseCase } from "@domain/ports/useCases/admin";
-import { EmailAlreadyExistsError } from "@domain/useCases/admin";
+import { AdminAlreadyExistsError } from "@domain/useCases/admin";
 import { FieldValidationError, ValidationErrors } from "@domain/validator";
 import { CreateAdminController } from "@presentation/controllers/admin";
 import { HttpResponse } from "@presentation/helpers";
@@ -40,13 +40,13 @@ describe("CreateAdminController", () => {
     expect(useCaseSpy).toHaveBeenCalledWith(fakeRequest.body);
   });
 
-  it("Should return bad request if CreateAdminUseCase.execute throws EmailAlreadyExistsError", async () => {
+  it("Should return bad request if CreateAdminUseCase.execute throws AdminAlreadyExistsError", async () => {
     const { sut, createAdminUseCaseMock } = makeSut();
 
-    jest.spyOn(createAdminUseCaseMock, "execute").mockRejectedValueOnce(new EmailAlreadyExistsError(fakeAdmin.email));
+    jest.spyOn(createAdminUseCaseMock, "execute").mockRejectedValueOnce(new AdminAlreadyExistsError(fakeAdmin.email));
     const response = await sut.handle(fakeRequest);
 
-    expect(response).toEqual(HttpResponse.badRequest([new EmailAlreadyExistsError(fakeAdmin.email)]));
+    expect(response).toEqual(HttpResponse.badRequest([new AdminAlreadyExistsError(fakeAdmin.email)]));
   });
 
   it("Should return bad request if CreateAdminUseCase.execute throws ValidationErrors", async () => {

@@ -5,7 +5,7 @@ import { CreateAdminRepository, FindAdminByEmailRepository } from "@domain/ports
 import { CreateAdminUseCase } from "@domain/ports/useCases/admin";
 import { ValidateInputs } from "@domain/validator";
 
-import { EmailAlreadyExistsError } from "./errors";
+import { AdminAlreadyExistsError } from "./errors";
 
 @singleton()
 export class DbCreateAdminUseCase implements CreateAdminUseCase {
@@ -17,7 +17,7 @@ export class DbCreateAdminUseCase implements CreateAdminUseCase {
   @ValidateInputs
   public async execute({ email, password }: CreateAdminUseCase.Input): Promise<CreateAdminUseCase.Result> {
     const existingAdmin = await this.adminRepository.findByEmail(email);
-    if (existingAdmin) throw new EmailAlreadyExistsError(existingAdmin.email);
+    if (existingAdmin) throw new AdminAlreadyExistsError(existingAdmin.email);
 
     const encryptedPassword = await this.encrypter.encrypt(password);
     return this.adminRepository.create({ email, password: encryptedPassword });

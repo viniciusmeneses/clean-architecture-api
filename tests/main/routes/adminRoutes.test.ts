@@ -64,7 +64,7 @@ describe("Admin Routes", () => {
       expect(response.body).toMatchObject({
         errors: [
           {
-            type: "EmailAlreadyExistsError",
+            type: "AdminAlreadyExistsError",
             message: `Admin already exists with email ${fakeData.email}`,
           },
         ],
